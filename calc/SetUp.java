@@ -20,12 +20,29 @@ public class SetUp {
 	 */
 	public static void setUpCalculator(CalculatorFace face) {
 
-		// delete this line.
-		face.writeToScreen("hello");
+		Brain brain = new Brain(face);
+		
+		face.writeToScreen("Hello");
+		
+		char[] operators = {'+', '-', '*', '/'};
+		
+		face.addPlusMinusActionListener((e) -> {brain.addOperator(CalculatorFace.PLUS_MINUS);});
+		face.addActionListener('C', (e) -> {brain.clear();});
+		face.addActionListener('.', (e) -> {brain.addDecimal();});
+		face.addActionListener('=', (e) -> {brain.calc();});
+		
+		for(int i = 0; i < operators.length; i++) {
+			final char a = operators[i];
+			face.addActionListener(a, (e) -> {brain.addOperator(a);});
+		}		
+		for(int i = 0; i < 10; i++) {
+			final int a = i;
+			face.addNumberActionListener(a, (e) -> {brain.addOperand(a);});
+		}
 		
 		
-		// add code here that will have the effect of connecting
-		// the given face to your calculator
+		
+		
 		
 		
 	}
