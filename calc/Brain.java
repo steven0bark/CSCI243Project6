@@ -12,6 +12,8 @@ import java.util.*;
  */
 public class Brain {
 
+	public interface Operation{ int calc(int n1, int n2); }
+	
 	private CalculatorFace face;
 	
 	private int number = 0;
@@ -30,11 +32,11 @@ public class Brain {
 		face = f;
 		operands = new Stack<>();
 		opmap = new HashMap<>();
-		opmap.put('+', this.new Plus());
-		opmap.put('*', this.new Mul());
-		opmap.put('-', this.new Minus());
-		opmap.put('/', this.new Div());
-		opmap.put(CalculatorFace.PLUS_MINUS, new PM());
+		opmap.put('+', (int n1, int n2) -> {return n1 + n2;});
+		opmap.put('*', (int n1, int n2) -> {return  n1 * n2;});
+		opmap.put('-', (int n1, int n2) -> {return  n1 - n2;}); 
+		opmap.put('/', (int n1, int n2) -> {return  n1 / n2;}); 
+		opmap.put(CalculatorFace.PLUS_MINUS, (int n1, int n2) -> {return 0-n1;}); 
 	}
 	
 	public void addOperand(int n) { 
@@ -47,20 +49,28 @@ public class Brain {
 		number = 0;
 	}
 	
-	public void operator(char c) {
-		try {
-			operands.push(number);
-			int answer = opmap.get(c).calc();
-			operands.push(answer);
-			face.writeToScreen(answer + "");
-			number = 0;
-		}catch(ArithmeticException e) {
-			int answer = 0;
-			operands.push(answer);
-			face.writeToScreen(answer + "");
-			number = 0;
+	public void operator(char c) {	
+		int answer;
+		operands.push(number);
+		int size = operands.size();
+		if(c == CalculatorFace.PLUS_MINUS){
+			if(size > 0){
+				int n1 = operands.pop();
+				answer = opmap.get(c).calc(n1, 0);
+			}else 
+			return;
+		}else{
+			if(size > 1){
+				int n2 = operands.pop();
+				int n1 = operands.pop();
+				answer = opmap.get(c).calc(n1, n2);
+			}else
+				return;
+
 		}
-		
+		operands.push(answer);
+		face.writeToScreen(answer + "");
+		number = 0;	
 	}
 	
 	
@@ -70,54 +80,8 @@ public class Brain {
 		operands.clear();
 	}
 	
-	public interface Operation{
-		int calc();
-	}
 	
-	public class Plus implements Operation {
-		
-		public Plus() {}
-		
-		public int calc() { 
-			if(operands.size()>1)
-				return operands.pop() + operands.pop(); 
-			return number;
-		}
-	}
 	
-	public class Minus implements Operation{ 
-		
-		public Minus() {}
-		
-		public int calc() { return ((0-operands.pop()) + operands.pop()); } 
-		
-	}
 	
-	public class Mul implements Operation{
 
-		public Mul() {}
-		
-		public int calc() {return operands.pop() * operands.pop();}
-		
-	}
-
-	public class Div implements Operation{
-		
-		public Div() {}
-		
-		public int calc() {
-			int operand2 = operands.pop();
-			int operand1 = operands.pop();
-			return operand1 / operand2; 
-		}
-		
-	}
-
-	public class PM implements Operation{
-
-		public PM() {}
-		
-		public int calc() { return (-operands.pop());}
-		
-	}
 }

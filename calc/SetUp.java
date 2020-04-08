@@ -2,7 +2,7 @@ package calc;
 
 /**
  * SetUp.java
- * 
+ *
  * Class to set up and start the calculator, plus
  * facilities for test-driving the calculator.
  *
@@ -35,13 +35,7 @@ public class SetUp {
 			final int a = i;
 			face.addNumberActionListener(a, (e) -> {brain.addOperand(a);});
 		}
-		
-		
-		
-		
-		
-		
-	}
+	}	
 	
 	
 	/**
