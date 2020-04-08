@@ -18,13 +18,10 @@ public class Brain {
 
 	private Stack<Integer> operands;
 	
-	private Stack<Character> operators;
-	
-	private String toprint;
 	
 	private HashMap<Character, Operation> opmap;
 	
-	private int answer = 0;
+	//private int answer = 0;
 	
 	/**
 	 * Constructor
@@ -32,80 +29,55 @@ public class Brain {
 	public Brain(CalculatorFace f) { 
 		face = f;
 		operands = new Stack<>();
-		operators = new Stack<>();
 		opmap = new HashMap<>();
 		opmap.put('+', this.new Plus());
 		opmap.put('*', this.new Mul());
 		opmap.put('-', this.new Minus());
 		opmap.put('/', this.new Div());
 		opmap.put(CalculatorFace.PLUS_MINUS, new PM());
-		}
+	}
 	
 	public void addOperand(int n) { 
 		operator = (operator * 10) + n;
-		toprint += "" + operator;
-		face.writeToScreen("" + operator); 
-		System.out.println(toprint);
+		face.writeToScreen(operator + ""); 
 	}
 	
 	public void addDecimal() {
-		toprint += ".";
-		face.writeToScreen(toprint);
 		operands.push(operator);
 		operator = 0;
-		System.out.println(toprint);
-
 	}
 	
-	public void addOperator(char c) {
-		toprint += c;
-		operators.push(c);
-		face.writeToScreen(toprint);
-		System.out.println(toprint);
-
-	}
-	
-	public void addPlusMinus() {
-		toprint += CalculatorFace.PLUS_MINUS;
-		operators.push(CalculatorFace.PLUS_MINUS);
-		face.writeToScreen(toprint);
-		System.out.println(toprint);
-
-	}
-	
-	public void calc() {
-		while (!operators.empty()) 
-			answer += opmap.get(operators.pop()).solve();
-		clear();
+	public void operator(char c) {
+		int answer = opmap.get(c).calc();
 		operands.push(answer);
-		face.writeToScreen("" + answer);
-		answer = 0;
+		face.writeToScreen(answer + "");
 	}
+	
+	
 	
 	public void clear() {
-		toprint = "";
-		face.writeToScreen(toprint);
+		face.writeToScreen("");
 		operator = 0;
 		operands.clear();
-		operators.clear();
+
 	}
 	
 	public interface Operation{
-		int solve();
+		int calc();
 	}
 	
 	public class Plus implements Operation {
 		
 		public Plus() {}
 		
-		public int solve() { return operands.pop() + operands.pop(); }
+		public int calc() { return operands.pop() + operands.pop(); }
 	}
 	
 	public class Minus implements Operation{ 
 		
 		public Minus() {}
 		
-		public int solve() { return operands.pop() - operands.pop(); } 
+		public int calc() { return ((0-operands.pop()) + operands.pop()); } 
 		
 	}
 	
@@ -113,15 +85,15 @@ public class Brain {
 
 		public Mul() {}
 		
-		public int solve() {return operands.pop() * operands.pop();}
+		public int calc() {return operands.pop() * operands.pop();}
 		
 	}
 
 	public class Div implements Operation{
-
+		
 		public Div() {}
 		
-		public int solve() {return operands.pop() * operands.pop(); }
+		public int calc() {return ((1/operands.pop()) * operands.pop()); }
 		
 	}
 
@@ -129,7 +101,7 @@ public class Brain {
 
 		public PM() {}
 		
-		public int solve() { return (0-operands.pop());}
+		public int calc() { return (0-operands.pop());}
 		
 	}
 }

@@ -1,7 +1,7 @@
 package calc;
 
 /**
- * SetUp
+ * SetUp.java
  * 
  * Class to set up and start the calculator, plus
  * facilities for test-driving the calculator.
@@ -21,19 +21,15 @@ public class SetUp {
 	public static void setUpCalculator(CalculatorFace face) {
 
 		Brain brain = new Brain(face);
-		
-		face.writeToScreen("Hello");
-		
+				
 		char[] operators = {'+', '-', '*', '/'};
-		
-		face.addPlusMinusActionListener((e) -> {brain.addOperator(CalculatorFace.PLUS_MINUS);});
+		face.addPlusMinusActionListener((e) -> {brain.operator(CalculatorFace.PLUS_MINUS);});
 		face.addActionListener('C', (e) -> {brain.clear();});
 		face.addActionListener('.', (e) -> {brain.addDecimal();});
-		face.addActionListener('=', (e) -> {brain.calc();});
 		
 		for(int i = 0; i < operators.length; i++) {
 			final char a = operators[i];
-			face.addActionListener(a, (e) -> {brain.addOperator(a);});
+			face.addActionListener(a, (e) -> {brain.operator(a);});
 		}		
 		for(int i = 0; i < 10; i++) {
 			final int a = i;
