@@ -14,7 +14,7 @@ public class Brain {
 
 	private CalculatorFace face;
 	
-	private int operator = 0;
+	private int number = 0;
 
 	private Stack<Integer> operands;
 	
@@ -38,28 +38,36 @@ public class Brain {
 	}
 	
 	public void addOperand(int n) { 
-		operator = (operator * 10) + n;
-		face.writeToScreen(operator + ""); 
+		number = (number * 10) + n;
+		face.writeToScreen(number + ""); 
 	}
 	
 	public void addDecimal() {
-		operands.push(operator);
-		operator = 0;
+		operands.push(number);
+		number = 0;
 	}
 	
 	public void operator(char c) {
-		int answer = opmap.get(c).calc();
-		operands.push(answer);
-		face.writeToScreen(answer + "");
+		try {
+			operands.push(number);
+			int answer = opmap.get(c).calc();
+			operands.push(answer);
+			face.writeToScreen(answer + "");
+			number = 0;
+		}catch(ArithmeticException e) {
+			int answer = 0;
+			operands.push(answer);
+			face.writeToScreen(answer + "");
+			number = 0;
+		}
+		
 	}
-	
 	
 	
 	public void clear() {
 		face.writeToScreen("");
-		operator = 0;
+		number = 0;
 		operands.clear();
-
 	}
 	
 	public interface Operation{
@@ -70,7 +78,11 @@ public class Brain {
 		
 		public Plus() {}
 		
-		public int calc() { return operands.pop() + operands.pop(); }
+		public int calc() { 
+			if(operands.size()>1)
+				return operands.pop() + operands.pop(); 
+			return number;
+		}
 	}
 	
 	public class Minus implements Operation{ 
@@ -93,7 +105,11 @@ public class Brain {
 		
 		public Div() {}
 		
-		public int calc() {return ((1/operands.pop()) * operands.pop()); }
+		public int calc() {
+			int operand2 = operands.pop();
+			int operand1 = operands.pop();
+			return operand1 / operand2; 
+		}
 		
 	}
 
@@ -101,7 +117,7 @@ public class Brain {
 
 		public PM() {}
 		
-		public int calc() { return (0-operands.pop());}
+		public int calc() { return (-operands.pop());}
 		
 	}
 }
