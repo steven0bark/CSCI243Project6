@@ -7,8 +7,9 @@ import java.util.*;
  * 
  * This class is the brain behind the calculator
  * 
- * @author stevenbarker
- *
+ * @author Steven Barker 
+ * CS 245, Wheaton College
+ * April 9th, 2019
  */
 public class Brain {
 
