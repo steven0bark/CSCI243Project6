@@ -1,4 +1,4 @@
-# CSCI245Project6
+# CSCI243Project6
 
 Project 6, CSCI245 Programming II, Spring 2020
 
